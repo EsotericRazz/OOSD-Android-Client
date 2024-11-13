@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+<<<<<<< HEAD
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addReward"
         android:layout_width="wrap_content"
@@ -26,12 +27,19 @@
         android:id="@+id/recyclerView"
         android:layout_width="409dp"
         android:layout_height="657dp"
+=======
+    <ListView
+        android:id="@+id/lvRewards"
+        android:layout_width="371dp"
+        android:layout_height="528dp"
+>>>>>>> c2f736fa5ce2c4a2241aff0f6fe707ed2e42a472
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+<<<<<<< HEAD
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,4 +50,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.007" />
+=======
+        android:id="@+id/textView2"
+        android:layout_width="306dp"
+        android:layout_height="50dp"
+        android:text="TravelExperts"
+        android:textAlignment="viewStart"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/lvRewards"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.847"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.634" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="64dp"
+        android:layout_height="66dp"
+        android:layout_marginBottom="10dp"
+        android:background="#61E24F"
+        android:backgroundTint="#4CAF50"
+        app:layout_constraintBottom_toTopOf="@+id/lvRewards"
+        app:layout_constraintEnd_toStartOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
+        android:text="Add New Reward"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.937"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lvRewards"
+        app:layout_constraintVertical_bias="0.333" />
+
+>>>>>>> c2f736fa5ce2c4a2241aff0f6fe707ed2e42a472
 </androidx.constraintlayout.widget.ConstraintLayout>
