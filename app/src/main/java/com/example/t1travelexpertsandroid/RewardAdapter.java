@@ -41,7 +41,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.ViewHolder
 
         ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.rewardName);
+            itemName = itemView.findViewById(R.id.txtRewardName);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();

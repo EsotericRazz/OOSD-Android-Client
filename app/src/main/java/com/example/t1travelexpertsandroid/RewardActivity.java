@@ -17,7 +17,7 @@ public class RewardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reward);
 
-        itemName = findViewById(R.id.rewardName);
+        itemName = findViewById(R.id.txtRewardName);
         btnAccept = findViewById(R.id.btnAccept);
         btnDelete = findViewById(R.id.btnDelete);
 
