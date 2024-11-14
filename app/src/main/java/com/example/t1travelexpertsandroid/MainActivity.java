@@ -55,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
     private void fetchDataFromApi() {
         /* TODO: Fetch data from API */
         // fetch data from API, update rewardList, and call adapter.notifyDataSetChanged();
+        try {
+
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     private void openDetailActivity(Reward reward) {
