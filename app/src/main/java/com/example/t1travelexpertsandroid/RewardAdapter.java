@@ -22,7 +22,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_reward, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reward_item, parent, false);
         return new ViewHolder(view);
     }
 
