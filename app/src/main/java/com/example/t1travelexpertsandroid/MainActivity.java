@@ -2,7 +2,9 @@ package com.example.t1travelexpertsandroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -11,9 +13,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,9 +72,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchDataFromApi() {
-        /* TODO: Fetch data from API */
-        // fetch data from API, update rewardList, and call adapter.notifyDataSetChanged();
-        
+        OkHttpClient client = new OkHttpClient();
+        String url = "http://10.0.2.2:8080/TeamOneREST_war_exploded/api/rewards";
+
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("API_ERROR", "Request failed: " + e.getMessage());
+                System.out.println(e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+
+                    Gson gson = new Gson();
+                    JsonArray jsonArray = gson.fromJson(response.body().string(), JsonArray.class);
+                    Log.d("API_RESPONSE", "Received data: " + jsonArray);
+
+                    rewardList.clear();
+                    jsonArray.forEach(jsonElement -> {
+                        JsonObject jsonObject = jsonElement.getAsJsonObject();
+                        int id = jsonObject.get("id").getAsInt();
+                        String name = jsonObject.get("rwdName").getAsString();
+                        String desc = jsonObject.get("rwdDesc") != null ? jsonObject.get("rwdDesc").getAsString(): "No Description available";
+
+                        Reward reward = new Reward(id, name, desc);
+                        rewardList.add(reward);
+                    });
+
+                    // Update adapter on the UI thread
+                    runOnUiThread(() -> adapter.notifyDataSetChanged());
+                } else {
+                    Log.e("API_ERROR", "Unsuccessful response or null body");
+                    System.out.println("Response was not successful or body was null.");
+                }
+            }
+        });
     }
 
     private void openDetailActivity(Reward reward) {

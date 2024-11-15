@@ -8,18 +8,22 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class RewardActivity extends AppCompatActivity {
-    private EditText itemName;
-    private Button btnAccept, btnDelete;
+    private EditText rewardId, rewardName, rewardDescription;
+    private Button btnAccept, btnDelete, btnCancel;
     private Reward reward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reward);
+        setContentView(R.layout.activity_details);
 
-        itemName = findViewById(R.id.txtRewardName);
+        rewardId = findViewById(R.id.txtRewardID);
+        rewardName = findViewById(R.id.txtRewardName);
+        rewardDescription = findViewById(R.id.txtRewardDesc);
+
         btnAccept = findViewById(R.id.btnAccept);
         btnDelete = findViewById(R.id.btnDelete);
+        btnCancel = findViewById(R.id.btnCancel);
 
         reward = getIntent().getParcelableExtra("rewardData");
 
@@ -32,10 +36,13 @@ public class RewardActivity extends AppCompatActivity {
 
         btnAccept.setOnClickListener(v -> saveOrUpdateItem());
         btnDelete.setOnClickListener(v -> deleteItem());
+        btnCancel.setOnClickListener(v -> finish());
     }
 
     private void populateFields(Reward reward) {
-        itemName.setText(reward.getName());
+        rewardId.setText(String.valueOf(reward.getId()));
+        rewardName.setText(reward.getName());
+        rewardDescription.setText(reward.getDescription());
     }
 
     private void saveOrUpdateItem() {
