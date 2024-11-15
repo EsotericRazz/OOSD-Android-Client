@@ -37,11 +37,13 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.ViewHolder
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView itemName;
+        TextView rewardName;
+        TextView rewardDescription;
 
         ViewHolder(View itemView) {
             super(itemView);
-            itemName = itemView.findViewById(R.id.txtRewardName);
+            rewardName = itemView.findViewById(R.id.txtRewardName);
+            rewardDescription = itemView.findViewById(R.id.txtRewardDesc);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
@@ -52,7 +54,8 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardAdapter.ViewHolder
         }
 
         void bind(Reward item) {
-            itemName.setText(item.getName());
+            rewardName.setText(item.getName());
+            rewardDescription.setText(item.getDescription());
         }
     }
 

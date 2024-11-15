@@ -6,15 +6,18 @@ import android.os.Parcelable;
 public class Reward implements Parcelable {
     private int id;
     private String name;
+    private String description;
 
-    public Reward(int id, String name) {
+    public Reward(int id, String name, String description) {
         this.id = id;
         this.name = name;
+        this.description = description;
     }
 
     protected Reward(Parcel in) {
         id = in.readInt();
         name = in.readString();
+        description = in.readString();
     }
 
     public static final Creator<Reward> CREATOR = new Creator<Reward>() {
@@ -29,6 +32,14 @@ public class Reward implements Parcelable {
         }
     };
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -37,12 +48,12 @@ public class Reward implements Parcelable {
         return this.name;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setDescription(String desc) {
+        this.description = desc;
     }
 
-    public int getId() {
-        return this.id;
+    public String getDescription() {
+        return this.description;
     }
 
     @Override
@@ -54,5 +65,6 @@ public class Reward implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(id);
         parcel.writeString(name);
+        parcel.writeString(description);
     }
 }

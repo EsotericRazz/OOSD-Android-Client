@@ -5,4 +5,8 @@
     <string name="acceptBtn">Accept</string>
     <string name="deleteBtn">Delete</string>
     <string name="hint">Reward Name</string>
+    <string name="click_to_view">Click to view</string>
+    <string name="description">Description:</string>
+    <string name="title">Travel Experts</string>
+    <string name="title_img">App icon</string>
 </resources>

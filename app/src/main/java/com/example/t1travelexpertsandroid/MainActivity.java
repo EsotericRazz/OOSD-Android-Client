@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Sample data for testing; replace with actual API data
         rewardList = new ArrayList<>();
-        rewardList.add(new Reward(1, "Sample Reward 1"));
-        rewardList.add(new Reward(2, "Sample Reward 2"));
+        rewardList.add(new Reward(1, "Sample Reward 1", "Blah blah blah"));
+        rewardList.add(new Reward(2, "Sample Reward 2", "Blah blah blah"));
 
         // Setup adapter with click listener
         adapter = new RewardAdapter(rewardList, this::openDetailActivity);
@@ -55,12 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private void fetchDataFromApi() {
         /* TODO: Fetch data from API */
         // fetch data from API, update rewardList, and call adapter.notifyDataSetChanged();
-        try {
-
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
+        
     }
 
     private void openDetailActivity(Reward reward) {
