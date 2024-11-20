@@ -14,6 +14,11 @@ public class Reward implements Parcelable {
         this.description = description;
     }
 
+    public Reward(String name, String description) {
+        this.name = name;
+        this.description = description;
+    };
+
     protected Reward(Parcel in) {
         id = in.readInt();
         name = in.readString();

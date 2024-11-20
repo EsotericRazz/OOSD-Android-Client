@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -112,11 +114,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private final ActivityResultLauncher<Intent> detailActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    rewardList.clear();
+                    fetchDataFromApi();
+                }
+            }
+    );
+
     private void openDetailActivity(Reward reward) {
         Intent intent = new Intent(this, RewardActivity.class);
         if (reward != null) {
             intent.putExtra("rewardData", reward);
         }
-        startActivity(intent);
+        detailActivityLauncher.launch(intent);
     }
 }

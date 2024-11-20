@@ -1,5 +1,6 @@
 package com.example.t1travelexpertsandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +40,7 @@ public class RewardActivity extends AppCompatActivity {
         rewardName = findViewById(R.id.txtRewardName);
         rewardDescription = findViewById(R.id.txtRewardDesc);
 
+        rewardId.setEnabled(false);
         btnAccept = findViewById(R.id.btnAccept);
         btnDelete = findViewById(R.id.btnDelete);
         btnCancel = findViewById(R.id.btnCancel);
@@ -49,13 +51,18 @@ public class RewardActivity extends AppCompatActivity {
             populateFields(reward);
             btnDelete.setVisibility(View.VISIBLE);
         } else {
+            findViewById(R.id.lbl1).setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
             rewardId.setVisibility(View.GONE);
         }
 
         btnAccept.setOnClickListener(v -> saveOrUpdateItem());
         btnDelete.setOnClickListener(v -> deleteItem());
-        btnCancel.setOnClickListener(v -> finish());
+        btnCancel.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        });
     }
 
     private void populateFields(Reward reward) {
@@ -67,12 +74,12 @@ public class RewardActivity extends AppCompatActivity {
     //UPDATE
     private void saveOrUpdateItem() {
     try {
-        String mode = "create";
+        String method;
 
         //Get the updated fields from the frontend
         String name = rewardName.getText().toString().trim();
         String description = rewardDescription.getText().toString().trim();
-        int id = Integer.parseInt(rewardId.getText().toString().trim());
+        int id;
 
         //validate we had a non null name for the reward ~ descriptions can be null
         if (name.isEmpty()) {
@@ -83,19 +90,20 @@ public class RewardActivity extends AppCompatActivity {
 
         //Make sure a reward exists first
         if (reward == null){
-            reward = new Reward(id, name, description);
+            reward = new Reward(name, description);
+            method = "post";
+        } else {
+            method = "put";
+            id = Integer.parseInt(rewardId.getText().toString().trim());
+            reward.setId(id);
         }
 
         //update the current reward with the new values received
-        reward.setId(id);
         reward.setName(name);
         reward.setDescription(description);
 
-        Log.d("Reward Data", "Name: " + reward.getName() + " Description: " + reward.getDescription());
-
         //Create json object to send
         JSONObject rewardJson = new JSONObject();
-        String method = reward == null ? "post" : "put";
 
         //only add the id if we are updating an entry
         if (method.equals("put")) rewardJson.put("id", reward.getId());
@@ -113,16 +121,26 @@ public class RewardActivity extends AppCompatActivity {
         RequestBody body = RequestBody.create(rewardJson.toString(), MediaType.parse("application/json"));
 
         //create the request
-        Request request = new Request.Builder()
-                .url(url)
-                .put(body)
-                .build();
+        Request request;
+        if (method.equalsIgnoreCase("post")) {
+            request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+        } else {
+            request = new Request.Builder()
+                    .url(url)
+                    .put(body)
+                    .build();
+        }
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("API ERROR", "Update Failed! " + e);
                 Toast.makeText(RewardActivity.this, "Error Updating Reward!" , Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 finish();
             }
 
@@ -138,21 +156,34 @@ public class RewardActivity extends AppCompatActivity {
                     Log.e("API SUCCESS", "Updated Success!");
                     runOnUiThread(() ->
                     {
+                        String msg;
+                        if (method.equalsIgnoreCase("post")) {
+                            msg = "Reward added";
+                        } else {
+                            msg = "Reward updated";
+                        }
                         //Update the front end here with updated data
-                        Toast.makeText(RewardActivity.this, "Reward Updated", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RewardActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        setResult(RESULT_OK, intent);
                         finish();
                     });
                 } else {
                     //Update Failed
                     Log.e("API ERROR", "Updated Failed! " + response.message());
                     Toast.makeText(RewardActivity.this, "Error Updating Reward!" , Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
             }
         });
         } catch(Exception e) {
+            Log.e("Error", e.getMessage());
             Log.e("ERROR", "Error Updating/Saving");
             Toast.makeText(RewardActivity.this, "Error Updating Reward!" , Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
             finish();
         }
     }
@@ -199,6 +230,8 @@ public class RewardActivity extends AppCompatActivity {
                 Log.e("DELETE", "Delete Success!");
                 runOnUiThread(() -> {
                     Toast.makeText(RewardActivity.this, "Reward #" + rewardID + " Deleted" , Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
                     finish();  // Close the activity
                 });
             }
