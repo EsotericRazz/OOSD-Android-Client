@@ -28,7 +28,7 @@ import okhttp3.Response;
 public class RewardActivity extends AppCompatActivity {
     private EditText rewardId, rewardName, rewardDescription;
     private Button btnAccept, btnDelete, btnCancel;
-    private Reward reward;
+    private Reward reward = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class RewardActivity extends AppCompatActivity {
             btnDelete.setVisibility(View.VISIBLE);
         } else {
             btnDelete.setVisibility(View.GONE);
+            rewardId.setVisibility(View.GONE);
         }
 
         btnAccept.setOnClickListener(v -> saveOrUpdateItem());
@@ -66,6 +67,8 @@ public class RewardActivity extends AppCompatActivity {
     //UPDATE
     private void saveOrUpdateItem() {
     try {
+        String mode = "create";
+
         //Get the updated fields from the frontend
         String name = rewardName.getText().toString().trim();
         String description = rewardDescription.getText().toString().trim();
@@ -78,7 +81,12 @@ public class RewardActivity extends AppCompatActivity {
             return;
         }
 
-        //update the current reward weith the new values recieved
+        //Make sure a reward exists first
+        if (reward == null){
+            reward = new Reward(id, name, description);
+        }
+
+        //update the current reward with the new values received
         reward.setId(id);
         reward.setName(name);
         reward.setDescription(description);
@@ -87,14 +95,21 @@ public class RewardActivity extends AppCompatActivity {
 
         //Create json object to send
         JSONObject rewardJson = new JSONObject();
-        rewardJson.put("RewardId", reward.getId());
-        rewardJson.put("RwdName", reward.getName());
-        rewardJson.put("RwdDesc", reward.getDescription());
+        String method = reward == null ? "post" : "put";
+
+        //only add the id if we are updating an entry
+        if (method.equals("put")) rewardJson.put("id", reward.getId());
+
+        //add reward name and reward description for both methods
+        rewardJson.put("rwdName", reward.getName());
+        rewardJson.put("rwdDesc", reward.getDescription());
+
         Log.d("Reward JSON", rewardJson.toString());
 
         //make the put request to the rest api
         OkHttpClient client = new OkHttpClient();
-        String url = "http://10.0.2.2:8080/TeamOneREST_war_exploded/api/rewards/put";
+
+        String url = "http://10.0.2.2:8080/TeamOneREST_war_exploded/api/rewards/" + method;
         RequestBody body = RequestBody.create(rewardJson.toString(), MediaType.parse("application/json"));
 
         //create the request
@@ -144,7 +159,6 @@ public class RewardActivity extends AppCompatActivity {
 
     //DELETE
     private void deleteItem() {
-
         //check we have a non null reward object
         if (reward == null) return;
 
@@ -166,7 +180,7 @@ public class RewardActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("ERROR", "Error deleting entry! " + e);
-                Toast.makeText(RewardActivity.this, "Error Deleting Reward!" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(RewardActivity.this, "Error Deleting Reward! Foreign Key Restraint?" , Toast.LENGTH_SHORT).show();
             }
 
             @Override
