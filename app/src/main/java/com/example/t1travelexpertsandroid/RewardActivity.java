@@ -27,6 +27,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class RewardActivity extends AppCompatActivity {
+    // Variables for texts, buttons and reward
     private EditText rewardId, rewardName, rewardDescription;
     private Button btnAccept, btnDelete, btnCancel;
     private Reward reward = null;
@@ -36,6 +37,7 @@ public class RewardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        // Set the variables
         rewardId = findViewById(R.id.txtRewardID);
         rewardName = findViewById(R.id.txtRewardName);
         rewardDescription = findViewById(R.id.txtRewardDesc);
@@ -45,8 +47,10 @@ public class RewardActivity extends AppCompatActivity {
         btnDelete = findViewById(R.id.btnDelete);
         btnCancel = findViewById(R.id.btnCancel);
 
+        // Get the reward
         reward = getIntent().getParcelableExtra("rewardData");
 
+        // If the reward is not null, populate the text fields, otherwise set the btnDelete and Reward Id as hidden (add mode)
         if (reward != null) {
             populateFields(reward);
             btnDelete.setVisibility(View.VISIBLE);
@@ -56,6 +60,7 @@ public class RewardActivity extends AppCompatActivity {
             rewardId.setVisibility(View.GONE);
         }
 
+        // Add listeners to all buttons
         btnAccept.setOnClickListener(v -> saveOrUpdateItem());
         btnDelete.setOnClickListener(v -> deleteItem());
         btnCancel.setOnClickListener(v -> {
@@ -65,13 +70,14 @@ public class RewardActivity extends AppCompatActivity {
         });
     }
 
+    // Populate the text fields with the given reward
     private void populateFields(Reward reward) {
         rewardId.setText(String.valueOf(reward.getId()));
         rewardName.setText(reward.getName());
         rewardDescription.setText(reward.getDescription());
     }
 
-    //UPDATE
+    // Update and add method
     private void saveOrUpdateItem() {
     try {
         String method;
